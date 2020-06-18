@@ -1,3 +1,3 @@
 # Cryptopals
 
-A description of this package.
+Swift implementation of cryptopals challenges at https://cryptopals.com/
