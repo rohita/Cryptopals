@@ -18,4 +18,11 @@ final class Set1Tests: XCTestCase {
         let output = "746865206b696420646f6e277420706c6179"
         XCTAssertEqual(Challenge2().fixedXor(input1, input2), output)
     }
+    
+    func testChallenge3() {
+        let input = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+        let output = Challenge3().findLikelyPlaintext(input)
+        XCTAssertEqual(output.key, 88)
+        XCTAssertEqual(output.plaintext, "Cooking MC's like a pound of bacon")
+    }
 }
