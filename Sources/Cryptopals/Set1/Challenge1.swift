@@ -15,7 +15,7 @@ So go ahead and make that happen. You'll need to use this code for the rest of t
 
 import Foundation
  
- struct Challenge1 {
+ class Challenge1 {
      // Convert hex to base64
      public func hexToB64(_ hexString: String) -> String {
          let data = Data(fromHexEncodedString: hexString)!

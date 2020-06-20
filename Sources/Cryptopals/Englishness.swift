@@ -15,7 +15,7 @@ and you get your coefficient.
 https://github.com/Lukasa/cryptopals/blob/master/cryptopals/challenge_one/three.py
 */
 
-struct Englishness {
+class Englishness {
     
     // This is an approximate character frequency table of the English language.
     // We'll use it to determine which plaintext is closest to being English. The

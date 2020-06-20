@@ -19,7 +19,7 @@
 
 import Foundation
 
-struct Challenge2 {
+class Challenge2 {
 
     public func fixedXor(_ hexString1: String, _ hexString2: String) -> String {
         let data1 = Data(fromHexEncodedString: hexString1)!

@@ -14,7 +14,7 @@
 
 import Foundation
 
-struct Challenge3 {
+class Challenge3 {
 
     /*
      Given a string that has been 'encrypted' by a single byte XOR cipher,
@@ -26,35 +26,37 @@ struct Challenge3 {
         let data = Data(fromHexEncodedString: hexString)!
         var outputList = [Decrypted]()
         
-        for ascii in 0...255 {
-            outputList.append(decrypt(data, using: ascii))
+        for key in 0...255 {
+            outputList.append(decrypt(data, using: key))
         }
         
         // Pick the one with highest englishness score
-        return outputList.max { a, b in a.score < b.score }!
+        return outputList.max { a, b in a.englishnessScore < b.englishnessScore }!
     }
     
-    func decrypt(_ data: Data, using ascii: Int) -> Decrypted {
+    func decrypt(_ data: Data, using key: Int) -> Decrypted {
         var tempBuffer = Data()
         for i in 0..<data.count {
-            tempBuffer.append(data[i] ^ UInt8(ascii))  // xor each char in buffer with ascii
+            tempBuffer.append(data[i] ^ UInt8(key))  // xor each char in buffer with ascii
         }
         let plaintext = tempBuffer.english()
         let score = Englishness.score(input: plaintext)
         
-        if (score > 0.7) {
-            print(String(format: "%c : %f : %@", ascii, score, plaintext))
+        if (score > 0.8) {
+            print(String(format: "%c : %f : %@", key, score, plaintext))
         }
         
         return Decrypted(
-            key: ascii,
+            ciphertext: data.hexEncodedString(),
+            decryptKey: key,
             plaintext: plaintext,
-            score: score)
+            englishnessScore: score)
     }
     
-    public struct Decrypted {
-        var key: Int
+    public struct Decrypted : Equatable {
+        var ciphertext: String
+        var decryptKey: Int
         var plaintext: String
-        var score: Double
+        var englishnessScore: Double
     }
 }
