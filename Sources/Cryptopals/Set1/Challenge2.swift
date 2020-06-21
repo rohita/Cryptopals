@@ -22,8 +22,12 @@ import Foundation
 class Challenge2 {
 
     public func fixedXor(_ hexString1: String, _ hexString2: String) -> String {
-        let buffer = Buffer.from(hexString1, encoding: .hex)
-        let output = buffer.repeatingKeyXOR(with: hexString2, encoding: .hex)
+        let data1 = Data.from(hexString1, encoding: .hex)!
+        let data2 = Data.from(hexString2, encoding: .hex)!
+        var output = Data()
+        for i in 0..<data1.count {
+            output.append(data1[i] ^ data2[i])
+        }
         return output.toString(encoding: .hex)
     }
 }

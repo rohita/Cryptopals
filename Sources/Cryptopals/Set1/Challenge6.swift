@@ -12,8 +12,8 @@ class Challenge6 {
     // The Hamming distance (or edit distance) is the number of differing bits
     // between two strings
     func hammingDistance(_ input1: String, _ input2: String) -> Int {
-        let bufferedInput1 = input1.data(using: .utf8)!
-        let bufferedInput2 = input2.data(using: .utf8)!
+        let bufferedInput1 = Data.from(input1, encoding: .utf8)!
+        let bufferedInput2 = Data.from(input2, encoding: .utf8)!
         var output = 0;
         
         /*

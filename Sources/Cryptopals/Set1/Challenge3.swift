@@ -23,7 +23,7 @@ class Challenge3 {
      decrypted string and the byte that decrypted it.
      */
     public func findLikelyPlaintext(_ hexString: String) -> Decrypted {
-        let data = Data(fromHexEncodedString: hexString)!
+        let data = Data.from(hexString, encoding: .hex)!
         var outputList = [Decrypted]()
         
         for key in 0...255 {
@@ -39,7 +39,7 @@ class Challenge3 {
         for i in 0..<data.count {
             tempBuffer.append(data[i] ^ UInt8(key))  // xor each char in buffer with ascii
         }
-        let plaintext = tempBuffer.english()
+        let plaintext = tempBuffer.toString(encoding: .utf8)
         let score = Englishness.score(input: plaintext)
         
         if (score > 0.8) {
@@ -47,7 +47,7 @@ class Challenge3 {
         }
         
         return Decrypted(
-            ciphertext: data.hexEncodedString(),
+            ciphertext: data.toString(encoding: .hex),
             decryptKey: key,
             plaintext: plaintext,
             englishnessScore: score)

@@ -16,10 +16,10 @@ So go ahead and make that happen. You'll need to use this code for the rest of t
 import Foundation
  
  class Challenge1 {
-    // Convert hex to base64
     
+    // Convert hex to base64
     public func hexToB64(_ hexString: String) -> String {
-        let bufferedInput = Buffer.from(hexString, encoding: .hex)
+        let bufferedInput = Data.from(hexString, encoding: .hex)!
         return bufferedInput.toString(encoding: .base64)
     }
  }
