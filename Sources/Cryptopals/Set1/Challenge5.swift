@@ -21,14 +21,8 @@ import Foundation
 
 class Challenge5 {
     func repeatingKeyXOR(input: String, key: String) -> String {
-        let bufferedInput = input.data(using: .utf8)!
-        let bufferedKey = key.data(using: .utf8)!
-        let keyLength = bufferedKey.count
-        
-        var output = Data()
-        for i in 0..<bufferedInput.count {
-            output.append(bufferedInput[i] ^ bufferedKey[i % keyLength])
-        }
-        return output.hexEncodedString()
+        let bufferedInput = Buffer.from(input, encoding: .utf8)
+        let output = bufferedInput.repeatingKeyXOR(with: key, encoding: .utf8)
+        return output.toString(encoding: .hex)
     }
 }

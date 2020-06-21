@@ -42,4 +42,11 @@ final class Set1Tests: XCTestCase {
         
         XCTAssertEqual(Challenge5().repeatingKeyXOR(input: input, key: "ICE"), output)        
     }
+    
+    func testChallenge6() {
+        let input1 = "this is a test"
+        let input2 = "wokka wokka!!!"
+        
+        XCTAssertEqual(Challenge6().hammingDistance(input1, input2), 37)
+    }
 }

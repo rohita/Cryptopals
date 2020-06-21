@@ -7,6 +7,17 @@ import Foundation
 // Data is a collection on UInt8
 extension Data {
     
+    static func from(_ string: String, encoding: Buffer.Encoding) -> Data? {
+        switch encoding {
+        case .hex:
+            return Data(fromHexEncodedString: string)
+        case .utf8:
+            return string.data(using: .utf8)
+        case .base64:
+            return Data(base64Encoded: string)
+        }
+    }
+    
     init?(fromHexEncodedString string: String) {
 
         // Convert 0 ... 9, a ... f, A ...F to their decimal value,
@@ -51,7 +62,4 @@ extension Data {
 //        charArray = map { Character(UnicodeScalar($0)) }
 //        return String(charArray)
     }
-    
-    
-    
 }
