@@ -57,5 +57,15 @@ final class Set1Tests: XCTestCase {
         XCTAssertEqual(output.decryptKey, "Terminator X: Bring the noise")
         XCTAssertEqual(output.cleartext, outputFile)
     }
+    
+    func testChallenge7() throws {
+        let inputFilePath: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/7.txt"
+        let outputFilePath: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/PlayThatFunkyMusic.txt"
+        let inputFile = try String(contentsOfFile: inputFilePath)
+        let outputFile = try String(contentsOfFile: outputFilePath)
+        
+        let output = Challenge7().decrypt(ciphertext: inputFile, key: "YELLOW SUBMARINE", inputEnc: .base64, keyEnc: .cleartext)!
+        XCTAssertEqual(output.toString(in: .cleartext), outputFile + "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0")
+    }
 
 }
