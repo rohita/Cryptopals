@@ -1,6 +1,6 @@
-//
-//  Created by Rohit Agarwal on 6/17/20.
-//
+/**
+ Helper extensions to Data class
+ */
 
 import Foundation
 
@@ -8,17 +8,27 @@ import Foundation
 extension Data {
     
     enum Encoding {
-        case hex, utf8, base64
+        /*
+         Cleartext is immediately understandable to a human being without additional processing.
+         Eg. "Cooking MC's like a pound of bacon". It is close to, but not entirely the same as
+         the term "plaintext". Formally, plaintext is information that is fed as an input to a
+         coding process, while ciphertext is what comes out of that process. Plaintext might be
+         compressed, coded, or otherwise changed before it is converted to ciphertext, so it is
+         quite common to find plaintext that is not cleartext. Ref: https://simple.wikipedia.org/wiki/Cleartext
+         */
+        case cleartext
+        case hex
+        case base64
     }
     
-    static func from(_ string: String, encoding: Encoding) -> Data? {
+    static func from(_ string: String, in encoding: Encoding) -> Data? {
         switch encoding {
         case .hex:
             return Data(fromHexEncodedString: string)
-        case .utf8:
+        case .cleartext:
             return string.data(using: .utf8)
         case .base64:
-            return Data(base64Encoded: string)
+            return Data(base64Encoded: string, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
         }
     }
     
@@ -55,13 +65,13 @@ extension Data {
         guard even else { return nil }
     }
     
-    func toString(encoding: Encoding) -> String {
+    func toString(in encoding: Encoding) -> String {
         switch encoding {
         case .base64:
             return self.base64EncodedString(options: NSData.Base64EncodingOptions.endLineWithLineFeed)
         case .hex:
             return map { String(format: "%02hhx", $0) }.joined()
-        default:
+        case .cleartext:
             return String(decoding: self, as: UTF8.self)
         }
     }
@@ -69,5 +79,4 @@ extension Data {
 //        var charArray = [Character]()
 //        charArray = map { Character(UnicodeScalar($0)) }
 //        return String(charArray)
-
 }

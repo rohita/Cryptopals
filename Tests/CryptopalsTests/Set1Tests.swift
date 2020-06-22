@@ -22,8 +22,8 @@ final class Set1Tests: XCTestCase {
     func testChallenge3() {
         let input = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
         let output = Challenge3().findLikelyPlaintext(input)
-        XCTAssertEqual(output.decryptKey, 88)
-        XCTAssertEqual(output.plaintext, "Cooking MC's like a pound of bacon")
+        XCTAssertEqual(output.decryptKey, "X")
+        XCTAssertEqual(output.cleartext, "Cooking MC's like a pound of bacon")
     }
     
     func testChallenge4() throws {
@@ -33,7 +33,7 @@ final class Set1Tests: XCTestCase {
         
         let output = Challenge4().findNeedle(haystack: text)
         XCTAssertEqual(output.ciphertext, "7b5a4215415d544115415d5015455447414c155c46155f4058455c5b523f")
-        XCTAssertEqual(output.plaintext, "Now that the party is jumping\n")
+        XCTAssertEqual(output.cleartext, "Now that the party is jumping\n")
     }
     
     func testChallenge5() {
@@ -43,10 +43,19 @@ final class Set1Tests: XCTestCase {
         XCTAssertEqual(Challenge5().repeatingKeyXOR(input: input, key: "ICE"), output)        
     }
     
-    func testChallenge6() {
-        let input1 = "this is a test"
-        let input2 = "wokka wokka!!!"
+    func testChallenge6() throws {
+        let bufferedInput1 = Data.from("this is a test", in: .cleartext)!
+        let bufferedInput2 = Data.from("wokka wokka!!!", in: .cleartext)!
+        XCTAssertEqual(Challenge6().hammingDistance(bufferedInput1, bufferedInput2), 37)
         
-        XCTAssertEqual(Challenge6().hammingDistance(input1, input2), 37)
+        let inputFilePath: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/6.txt"
+        let outputFilePath: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/PlayThatFunkyMusic.txt"
+        let inputFile = try String(contentsOfFile: inputFilePath)
+        let outputFile = try String(contentsOfFile: outputFilePath)
+        
+        let output = Challenge6().crackRepeatingXOR(ciphertext: inputFile)
+        XCTAssertEqual(output.decryptKey, "Terminator X: Bring the noise")
+        XCTAssertEqual(output.cleartext, outputFile)
     }
+
 }

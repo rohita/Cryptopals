@@ -15,6 +15,11 @@
 import Foundation
 
 class Challenge3 {
+    
+    public func findLikelyPlaintext(_ hexString: String) -> Decrypted {
+        let data = Data.from(hexString, in: .hex)!
+        return findLikelyPlaintext(data)
+    }
 
     /*
      Given a string that has been 'encrypted' by a single byte XOR cipher,
@@ -22,8 +27,7 @@ class Challenge3 {
      possible byte and testing the 'englishness' of the result. Returns the
      decrypted string and the byte that decrypted it.
      */
-    public func findLikelyPlaintext(_ hexString: String) -> Decrypted {
-        let data = Data.from(hexString, encoding: .hex)!
+    public func findLikelyPlaintext(_ data: Data) -> Decrypted {
         var outputList = [Decrypted]()
         
         for key in 0...255 {
@@ -39,24 +43,20 @@ class Challenge3 {
         for i in 0..<data.count {
             tempBuffer.append(data[i] ^ UInt8(key))  // xor each char in buffer with ascii
         }
-        let plaintext = tempBuffer.toString(encoding: .utf8)
+        let plaintext = tempBuffer.toString(in: .cleartext)
         let score = Englishness.score(input: plaintext)
         
-        if (score > 0.8) {
-            print(String(format: "%c : %f : %@", key, score, plaintext))
-        }
-        
         return Decrypted(
-            ciphertext: data.toString(encoding: .hex),
-            decryptKey: key,
-            plaintext: plaintext,
+            ciphertext: data.toString(in: .hex),
+            decryptKey: String(format: "%c", key),
+            cleartext: plaintext,
             englishnessScore: score)
     }
     
     public struct Decrypted : Equatable {
         var ciphertext: String
-        var decryptKey: Int
-        var plaintext: String
+        var decryptKey: String
+        var cleartext: String
         var englishnessScore: Double
     }
 }

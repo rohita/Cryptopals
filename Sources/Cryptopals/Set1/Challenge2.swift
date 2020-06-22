@@ -22,12 +22,12 @@ import Foundation
 class Challenge2 {
 
     public func fixedXor(_ hexString1: String, _ hexString2: String) -> String {
-        let data1 = Data.from(hexString1, encoding: .hex)!
-        let data2 = Data.from(hexString2, encoding: .hex)!
+        let data1 = Data.from(hexString1, in: .hex)!
+        let data2 = Data.from(hexString2, in: .hex)!
         var output = Data()
         for i in 0..<data1.count {
             output.append(data1[i] ^ data2[i])
         }
-        return output.toString(encoding: .hex)
+        return output.toString(in: .hex)
     }
 }

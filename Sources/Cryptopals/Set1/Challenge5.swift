@@ -21,14 +21,19 @@ import Foundation
 
 class Challenge5 {
     func repeatingKeyXOR(input: String, key: String) -> String {
-        let bufferedInput = Data.from(input, encoding: .utf8)!
-        let bufferedKey = Data.from(key, encoding: .utf8)!
+        let bufferedInput = Data.from(input, in: .cleartext)!
+        let bufferedKey = Data.from(key, in: .cleartext)!
+        let output = repeatingKeyXOR(bufferedInput: bufferedInput, bufferedKey: bufferedKey)
+        return output.toString(in: .hex)
+    }
+    
+    func repeatingKeyXOR(bufferedInput: Data, bufferedKey: Data) -> Data {
         let keyLength = bufferedKey.count
         
         var output = Data()
         for i in 0..<bufferedInput.count {
             output.append(bufferedInput[i] ^ bufferedKey[i % keyLength])
         }
-        return output.toString(encoding: .hex)
+        return output
     }
 }
