@@ -75,6 +75,22 @@ extension Data {
             return String(decoding: self, as: UTF8.self)
         }
     }
+    
+    func breakIntoBlocks(ofSize blockSize: Int) -> [Data] {
+        var blocks = [Data]()
+        
+        // break input into blockSize blocks
+        for startIndex in stride(from: 0, to: self.count, by: blockSize)  {
+            var block = Data(count: blockSize)
+            let endIndex = startIndex + blockSize > self.count ? self.count : startIndex + blockSize
+            let rangeToCopy = startIndex..<endIndex
+            
+            block.replaceSubrange(0..<(rangeToCopy.count), with: self.subdata(in: rangeToCopy))
+            blocks.append(block)
+        }
+        
+        return blocks
+    }
         
 //        var charArray = [Character]()
 //        charArray = map { Character(UnicodeScalar($0)) }

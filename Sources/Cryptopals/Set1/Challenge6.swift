@@ -68,23 +68,13 @@ class Challenge6 {
         
         // for each KEYSIZE possibility
         for keysize in likelyKeysizes {
-            let length = bufferedInput.count;
-            var blockInput = [Data]()
             
             // break input into KEYSIZE blocks
-            for startIndex in stride(from: 0, to: length, by: keysize)  {
-                var block = Data(count: keysize)
-                let endIndex = startIndex + keysize > length ? length : startIndex + keysize
-                let rangeToCopy = startIndex..<endIndex
-                
-                block.replaceSubrange(0..<(rangeToCopy.count), with: bufferedInput.subdata(in: rangeToCopy))
-                blockInput.append(block)
-            }
-            
+            let blockInput : [Data] = bufferedInput.breakIntoBlocks(ofSize: keysize)
+
+            // transpose input into blocks of just 1st byte of each block, just 2nd etc
             let transposeBlockSize = blockInput.count
             var transposedInputArr = [Data]()
-            
-            // transpose input into blocks of just 1st byte of each block, just 2nd etc
             for byteIndex in 0..<keysize {
                 var transposed = Data(count: transposeBlockSize)
                 for blockIndex in 0..<transposeBlockSize  {
