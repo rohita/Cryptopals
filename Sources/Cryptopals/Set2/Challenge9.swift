@@ -18,13 +18,19 @@
 import Foundation
 
 class Challenge9 {
-    func pkcs7(plainText: String, blockSize: Int) -> String {
-        let bufferedInput = Data.from(plainText, in: .cleartext)!
+    func pkcs7(bufferedInput: Data, blockSize: Int) -> Data {
         let inputLength = bufferedInput.count
-        let padLen = inputLength <= blockSize ? blockSize - inputLength : inputLength % blockSize
+        
+        /*
+         If the length of the original data is an integer multiple of the block size B, then an extra block of
+         bytes with value B is added. This is necessary so the deciphering algorithm can determine with certainty
+         whether the last byte of the last block is a pad byte indicating the number of padding bytes added or
+         part of the plaintext message.
+         */
+        let padLen = inputLength < blockSize ? blockSize - inputLength : blockSize - (inputLength % blockSize)
         
         if (padLen == 0) {
-            return bufferedInput.toString(in: .cleartext)
+            return bufferedInput
         }
         
         // Pad with same digit as the number of bytes required to pad
@@ -32,6 +38,6 @@ class Challenge9 {
         let pad = [UInt8](repeating: UInt8(padLen), count: padLen)
         var output = Data(bufferedInput)
         output.append(contentsOf: pad)
-        return output.toString(in: .cleartext)
+        return output
     }
 }

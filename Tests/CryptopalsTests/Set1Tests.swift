@@ -58,14 +58,24 @@ final class Set1Tests: XCTestCase {
         XCTAssertEqual(output.cleartext, outputFile)
     }
     
-    func testChallenge7() throws {
+    func testChallenge7_decrypt() throws {
         let inputFilePath: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/7.txt"
         let outputFilePath: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/PlayThatFunkyMusic.txt"
         let inputFile = try String(contentsOfFile: inputFilePath)
         let outputFile = try String(contentsOfFile: outputFilePath)
         
-        let output = Challenge7().decrypt(ciphertext: inputFile, key: "YELLOW SUBMARINE", inputEnc: .base64, keyEnc: .cleartext)!
-        XCTAssertEqual(output.toString(in: .cleartext), outputFile + "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0")
+        let output = Challenge7().decryptECB(cipherData: Data.from(inputFile, in: .base64)!, keyData: Data.from("YELLOW SUBMARINE", in: .cleartext)!)!
+        XCTAssertEqual(output.toString(in: .cleartext), outputFile + "\u{4}\u{4}\u{4}\u{4}")
+    }
+    
+    func testChallenge7_encrypt() throws {
+        let input = "two seventy three alfredo sauce!"
+        let output = "7fd5e4aa58a5ba5ccd0f36f70ec73f9118b85f95de41ce8ffc179f6f3500a61f789123cb6b31285e25afb0d331cb2af7"
+        let key = "KOMBUCHA IS LIFE"
+        let encrypted = Challenge7().encryptECB(plainData: Data.from(input, in: .cleartext)!, keyData: Data.from(key, in: .cleartext)!)!
+        let decrypted = Challenge7().decryptECB(cipherData: Data.from(output, in: .hex)!, keyData: Data.from(key, in: .cleartext)!)!
+        XCTAssertEqual(encrypted.toString(in: .hex), output)
+        XCTAssertEqual(decrypted.toString(in: .cleartext), input + "\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}")
     }
     
     func testChallenge8() throws {

@@ -38,7 +38,7 @@ class Challenge3 {
         return outputList.max { a, b in a.englishnessScore < b.englishnessScore }!
     }
     
-    func decrypt(_ data: Data, using key: Int) -> Decrypted {
+    private func decrypt(_ data: Data, using key: Int) -> Decrypted {
         var tempBuffer = Data()
         for i in 0..<data.count {
             tempBuffer.append(data[i] ^ UInt8(key))  // xor each char in buffer with ascii
