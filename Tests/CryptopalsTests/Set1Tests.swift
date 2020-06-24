@@ -53,9 +53,18 @@ final class Set1Tests: XCTestCase {
         let inputFile = try String(contentsOfFile: inputFilePath)
         let outputFile = try String(contentsOfFile: outputFilePath)
         
-        let output = Challenge6().crackRepeatingXOR(ciphertext: inputFile)
+        let output = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(inputFile, in: .base64)!)
         XCTAssertEqual(output.decryptKey, "Terminator X: Bring the noise")
         XCTAssertEqual(output.cleartext, outputFile)
+    }
+    
+    func testChallenge6_with5() throws {
+        let input = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
+        let encrypted = Challenge5().repeatingKeyXOR(input: input, key: "ICE")
+        
+        let decrpted = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(encrypted, in: .hex)!)
+        XCTAssertEqual(decrpted.decryptKey, "ICE")
+        XCTAssertEqual(decrpted.cleartext, input)
     }
     
     func testChallenge7_decrypt() throws {

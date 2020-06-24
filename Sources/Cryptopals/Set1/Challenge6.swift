@@ -42,18 +42,26 @@ class Challenge6 {
     
     func guessKeySize(bufferedInput: Data) -> [Int] {
         var keySizes: [Int: Double] = [:]
-        for i in 2...40 { // trying KEYSIZEs from 2 to 40
-            var slices = [Data]()
-            for j in 0...4 { // take five slices of KEYSIZE length
-                slices.append(bufferedInput.subdata(in: (j*i)..<(j*i + i)))
+        
+        // trying KEYSIZEs from 2 to 40
+        for i in 2...40 {
+            let slices : [Data] = bufferedInput.breakIntoBlocks(ofSize: i)
+            if (slices.count < 2) {
+                continue
             }
-            let hd1 : Double = Double(hammingDistance(slices[0], slices[1]) / i);
-            let hd2 : Double = Double(hammingDistance(slices[1], slices[2]) / i);
-            let hd3 : Double = Double(hammingDistance(slices[2], slices[3]) / i); // normalize hamming distance
-            let hd4 : Double = Double(hammingDistance(slices[3], slices[4]) / i); // by dividing by KEYSIZE
             
-            // average out the four slices
-            keySizes[i] = (hd1 + hd2 + hd3 + hd4) / 4
+            /*
+             Unlike the Cryptopals challenge suggestion to compare just the first two or four
+             blocks of the ciphertext, we calculate all the blocks in the ciphertext. The first
+             few blocks were not enough to the correct answer for block size.
+             */
+            for j in 0..<(slices.count-1) {
+                // normalize hamming distance by dividing by KEYSIZE
+                keySizes[i, default: 0.0] += Double(hammingDistance(slices[j], slices[j+1])) / Double(i)
+            }
+           
+            // average out the hamming distances
+            keySizes[i] = keySizes[i, default: 0.0] / Double(slices.count-1)
         }
         
         // sort by smallest hd and return the top 3 likely KEYSIZEs
@@ -61,9 +69,9 @@ class Challenge6 {
         return sortedByHammingDistance.prefix(3).map { $0.0 }
     }
     
-    func crackRepeatingXOR(ciphertext: String) -> Challenge3.Decrypted {
-        let bufferedInput = Data.from(ciphertext, in: .base64)!
+    func crackRepeatingXOR(bufferedInput: Data) -> Challenge3.Decrypted {
         let likelyKeysizes = guessKeySize(bufferedInput: bufferedInput)
+        print("Key sizes guessed: \(likelyKeysizes)")
         var possibleDecrypted = [Challenge3.Decrypted]()
         
         // for each KEYSIZE possibility
@@ -102,6 +110,8 @@ class Challenge6 {
                 decryptKey: bufferedKey.toString(in: .cleartext),
                 cleartext: plaintext,
                 englishnessScore: score))
+            
+            print("Key=\(bufferedKey.toString(in: .cleartext)), Englishness Score=\(score)")
         }
         
         // Pick the one with highest englishness score
