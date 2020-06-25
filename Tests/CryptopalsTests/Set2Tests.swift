@@ -73,6 +73,26 @@ final class Set2Tests: XCTestCase {
         let output = Challenge11().randomEncrypt(Data.from(input, in: .cleartext)!)
         XCTAssertEqual(Challenge11().oracle(ciphertext: output.ciphertext), output.mode)
     }
+    
+    func testChallenge12() {
+        let secretSauce = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
+        let output = "Rollin\' in my 5.0\nWith my rag-top down so my hair can blow\nThe girlies on standby waving just to say hi\nDid you stop? No, I just drove by\n\u{1}"
+        let ecbWithSecret = Challenge12(secretSauce: Data.from(secretSauce, in: .base64)!)
+        
+        // should encrypt with a consistent random key
+        let encrypt1 = ecbWithSecret.encryptWithSecretSauce(bufferedInput: Data.from("test", in: .cleartext)!)
+        let encrypt2 = ecbWithSecret.encryptWithSecretSauce(bufferedInput: Data.from("test", in: .cleartext)!)
+        XCTAssertEqual(encrypt1, encrypt2)
+        
+        // should determine the block size of ciphertext
+        XCTAssertEqual(ecbWithSecret.findBlockSize(), 16)
+        
+        // should detect ECB as the mode used
+        XCTAssertTrue(ecbWithSecret.detectECB())
+        
+        // should determine the secret sauce
+        XCTAssertEqual(ecbWithSecret.crackECB(), output)
+    }
 }
 
 
