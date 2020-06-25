@@ -44,6 +44,35 @@ final class Set2Tests: XCTestCase {
                 
         XCTAssertEqual(output.toString(in: .cleartext), outputFile + "\u{4}\u{4}\u{4}\u{4}")
     }
+    
+    func testChallenge11_generateRandomKey() {
+        let key1 = Challenge11().generateRandomKey(length: 16)
+        let key2 = Challenge11().generateRandomKey(length: 16)
+        XCTAssertNotEqual(key1.toString(in: .hex), key2.toString(in: .hex))
+        XCTAssertEqual(key1.count, 16)
+    }
+    
+    func testChallenge11_appendRandomBytes() {
+        let input = Data.from("hello world", in: .cleartext)!
+        let inputLength = input.count
+        XCTAssertLessThan(inputLength, Challenge11().appendRandomBytes(to: input).count)
+    }
+    
+    func testChallenge11_randomEncrypt() {
+        let input = Data.from("See the line where the sky meets the sea? It calls me.", in: .cleartext)!
+        let output1 = Challenge11().randomEncrypt(input)
+        let output2 = Challenge11().randomEncrypt(input)
+        let output3 = Challenge11().randomEncrypt(input)
+        let output4 = Challenge11().randomEncrypt(input)
+        XCTAssertNotEqual(output1.ciphertext, output2.ciphertext)
+        XCTAssertNotEqual(output3.ciphertext, output4.ciphertext)
+    }
+    
+    func testChallenge11_oracle() {
+        let input = String(repeating: "a", count: 200) // nice identical stuff for us to find in ECB :)
+        let output = Challenge11().randomEncrypt(Data.from(input, in: .cleartext)!)
+        XCTAssertEqual(Challenge11().oracle(ciphertext: output.ciphertext), output.mode)
+    }
 }
 
 

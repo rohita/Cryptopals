@@ -17,11 +17,10 @@ import Foundation
 class Challenge8 {
     
     func detectECBinArray(haystack: [String]) -> [String] {
-        return haystack.filter { findDupes(hexString: $0, blockSize: 16) }
+        return haystack.filter { detectECB(bufferedInput: Data.from($0, in: .hex)!, blockSize: 16) }
     }
     
-    private func findDupes(hexString: String, blockSize: Int) -> Bool {
-        let bufferedInput = Data.from(hexString, in: .hex)!
+    func detectECB(bufferedInput: Data, blockSize: Int) -> Bool {
         
         // ECB is deterministic, so the same plaintext chunk of 16 bytes
         // would be encrypted into the same ciphertext chunk of 16 bytes.
