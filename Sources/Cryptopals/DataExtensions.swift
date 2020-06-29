@@ -91,6 +91,12 @@ extension Data {
         
         return blocks
     }
+    
+    static func +(left: Data, right: Data) -> Data {
+        var output = Data(left)
+        output.append(right)
+        return output
+    }
         
 //        var charArray = [Character]()
 //        charArray = map { Character(UnicodeScalar($0)) }

@@ -93,7 +93,29 @@ final class Set2Tests: XCTestCase {
         // should determine the secret sauce
         XCTAssertEqual(ecbWithSecret.crackECB(), output)
     }
+    
+    func testChallenge13() throws {
+        let challenge13 = Challenge13()
+        
+        XCTAssertEqual(challenge13.sanitize(input: "foo@bar.com&role=admin"), "foo@bar.comroleadmin")
+        XCTAssertEqual(challenge13.profileFor(email: "foo@bar.com"), "email=foo@bar.com&uid=10&role=user")
+        
+        let encodedProfile = challenge13.generateEncodedProfile(email: "foo@bar.com")
+        XCTAssertEqual(encodedProfile.count, 48)
+        
+        let decodedProfile = try challenge13.decodeEncryptedProfile(bufferedInput: encodedProfile)
+        XCTAssertEqual(decodedProfile.toString(in: .cleartext), "email=foo@bar.com&uid=10&role=user")
+        
+        let decodedAdminProfile = try challenge13.createAdminProfile()
+        XCTAssertEqual(decodedAdminProfile.toString(in: .cleartext), "email=AAAAAAAAAAAAA&uid=10&role=admin")
+    }
+    
+    func testChallenge15()  {
+        let output = Data.from("ICE ICE BABY", in: .cleartext)!
+        let pad4 = output + Data.from("\u{4}\u{4}\u{4}\u{4}", in: .cleartext)!
+        let pad5 = output + Data.from("\u{5}\u{5}\u{5}\u{5}", in: .cleartext)!
+        XCTAssertEqual(try Challenge15().removePad(bufferedInput: pad4, blockSize: 16), output)
+        XCTAssertThrowsError(try Challenge15().removePad(bufferedInput: pad5, blockSize: 16))
+    }
 }
-
-
 
