@@ -39,12 +39,13 @@ class Challenge12 {
         self.secretSauce = secretSauce
     }
     
-    func encryptWithSecretSauce(bufferedInput: Data) -> Data {
+    func encryptWithSecretSauce(cleartext: String) -> Data {
+        let bufferedInput = Data.from(cleartext, in: .cleartext)!
         let fullInput = bufferedInput + secretSauce
         return Challenge7().encryptECB(plainData: fullInput, keyData: key)!
     }
     
-    func findBlockSize() -> Int {
+    static func findBlockSize(encryptFunction: (String) -> Data) -> Int {
         // Feed identical bytes of a string to the encrypt function 1 at a time ---
         // start with 1 byte ("A"), then "AA", then "AAA" and so on. Discover the block size of the cipher.
         var i = 1
@@ -52,7 +53,7 @@ class Challenge12 {
         var currentSize = 0
         
         while (blockGuess < 1 && i <= 256) {
-            let currentCT = encryptWithSecretSauce(bufferedInput: Data.from(String(repeating: "A", count: i), in: .cleartext)!)
+            let currentCT = encryptFunction(String(repeating: "A", count: i))
             if (currentCT.count > currentSize && currentSize > 0) {
                 blockGuess = currentCT.count - currentSize   // this will reach only when a new block is added, which will be blocksize boundary
             }
@@ -64,35 +65,33 @@ class Challenge12 {
     
     // Detect that the function is using ECB
     func detectECB() -> Bool {
-        let blockSize = findBlockSize()
+        let blockSize = Challenge12.findBlockSize(encryptFunction: encryptWithSecretSauce)
         let payload = String(repeating: "A", count: blockSize*5) // should definitely get a dupe here
-        let ciphertext = encryptWithSecretSauce(bufferedInput: Data.from(payload, in: .cleartext)!)
+        let ciphertext = encryptWithSecretSauce(cleartext: payload)
         return Challenge8().detectECB(bufferedInput: ciphertext, blockSize: blockSize)
     }
     
     func crackECB() -> String {
-        let blockSize = findBlockSize()
-        let ciphertext = encryptWithSecretSauce(bufferedInput: Data.from(String(repeating: "A", count: blockSize), in: .cleartext)!)
+        let blockSize = Challenge12.findBlockSize(encryptFunction: encryptWithSecretSauce)
+        let ciphertext = encryptWithSecretSauce(cleartext: String(repeating: "A", count: blockSize))
         let secretSauceLength = ciphertext.count - blockSize
         var recoveredPlaintext : String = ""
         
         for k in stride(from: 0, to: secretSauceLength, by: blockSize) {
             for j in 1...blockSize {
                 var dictionary : [String : Int] = [:]
-                let aaaaaaa = Data.from(String(repeating: "A", count: blockSize-j), in: .cleartext)!  // "AAAAAAA..." 15 A's
-                let aaaaaaaPlusUnknown = encryptWithSecretSauce(bufferedInput: aaaaaaa).subdata(in: k..<(k+blockSize))  // we know 15 bytes are A's and 16th will be the first from the secret sauce
+                let aaaaaaa = String(repeating: "A", count: blockSize-j)  // "AAAAAAA..." 15 A's
+                let aaaaaaaPlusUnknown = encryptWithSecretSauce(cleartext: aaaaaaa).subdata(in: k..<(k+blockSize))  // we know 15 bytes are A's and 16th will be the first from the secret sauce
                 
                 for i in 0...255 {
-                    var currentPayload = Data()
-                    currentPayload.append(aaaaaaa)  // 15 A's
-                    currentPayload.append(Data.from(recoveredPlaintext, in: .cleartext)!)  // What ever we have discovered so far
-                    currentPayload.append(UInt8(i))  // brute force each character for the 16th byte
-                    let aaaaaaaPlusKnown = encryptWithSecretSauce(bufferedInput: currentPayload).subdata(in: k..<(k+blockSize)) // we know all 16 bytes
+                    var currentPayload = aaaaaaa + recoveredPlaintext // 15 A's + What ever we have discovered so far
+                    currentPayload.append(i.toChar())  // brute force each character for the 16th byte
+                    let aaaaaaaPlusKnown = encryptWithSecretSauce(cleartext: currentPayload).subdata(in: k..<(k+blockSize)) // we know all 16 bytes
                     dictionary[aaaaaaaPlusKnown.toString(in: .hex)] = i
                 }
                 
                 if let val = dictionary[aaaaaaaPlusUnknown.toString(in: .hex)] {
-                    recoveredPlaintext += String(format: "%c", val)  // whichever char matches should be the one
+                    recoveredPlaintext += val.toChar()  // whichever char matches should be the one
                 }
             }
         }

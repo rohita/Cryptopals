@@ -80,12 +80,12 @@ final class Set2Tests: XCTestCase {
         let ecbWithSecret = Challenge12(secretSauce: Data.from(secretSauce, in: .base64)!)
         
         // should encrypt with a consistent random key
-        let encrypt1 = ecbWithSecret.encryptWithSecretSauce(bufferedInput: Data.from("test", in: .cleartext)!)
-        let encrypt2 = ecbWithSecret.encryptWithSecretSauce(bufferedInput: Data.from("test", in: .cleartext)!)
+        let encrypt1 = ecbWithSecret.encryptWithSecretSauce(cleartext: "test")
+        let encrypt2 = ecbWithSecret.encryptWithSecretSauce(cleartext: "test")
         XCTAssertEqual(encrypt1, encrypt2)
         
         // should determine the block size of ciphertext
-        XCTAssertEqual(ecbWithSecret.findBlockSize(), 16)
+        XCTAssertEqual(Challenge12.findBlockSize(encryptFunction: ecbWithSecret.encryptWithSecretSauce), 16)
         
         // should detect ECB as the mode used
         XCTAssertTrue(ecbWithSecret.detectECB())

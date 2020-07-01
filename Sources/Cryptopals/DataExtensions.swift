@@ -102,3 +102,9 @@ extension Data {
 //        charArray = map { Character(UnicodeScalar($0)) }
 //        return String(charArray)
 }
+
+extension Int {
+    func toChar() -> String {
+        return String(format: "%c", self)
+    }
+}

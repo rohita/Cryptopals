@@ -55,24 +55,10 @@ class Challenge13 {
     }
     
     /************** Get Cracking ********************************/
-    func findBlockSize() -> Int {
-        var i = 1
-        var currentSize = 0
-        while (i <= 256) {
-            
-            let currentCT = generateEncodedProfile(email: String(repeating: "A", count: i))
-            if (currentCT.count > currentSize && currentSize > 0) {
-                return currentCT.count - currentSize
-            }
-            currentSize = currentCT.count
-            i += 1
-        }
-        return 0
-    }
     
     func createAdminProfile() throws -> Data {
         // find blocksize first
-        let blockSize = findBlockSize()
+        let blockSize = Challenge12.findBlockSize(encryptFunction: generateEncodedProfile)
         
         // get 'admin' plus a bunch of 11s (16-5 = 11) to make a block
         let adminDiffLength = blockSize - 5
