@@ -47,7 +47,7 @@ class Challenge3 {
         
         return Decrypted(
             ciphertext: data.toString(in: .hex),
-            decryptKey: key.toChar(),
+            decryptKey: String.from(charCode: key),
             cleartext: plaintext,
             englishnessScore: score)
     }

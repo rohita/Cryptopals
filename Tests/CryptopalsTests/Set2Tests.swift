@@ -110,6 +110,20 @@ final class Set2Tests: XCTestCase {
         XCTAssertEqual(decodedAdminProfile.toString(in: .cleartext), "email=AAAAAAAAAAAAA&uid=10&role=admin")
     }
     
+    func testChallenge14() {
+        let secretSauce = "dHdvc2V2ZW50eXRocmVlIHRvbWF0byBzYXVjZQ=="
+        let plaintext = "twoseventythree tomato sauce\u{1}"
+        let twelveWithSecret = Challenge12(secretSauce: Data.from(secretSauce, in: .base64))
+        let fourteenWithSecret = Challenge14(secretSauce: Data.from(secretSauce, in: .base64))
+        
+        // twelve encrypts with random consistent key, but doesn't prepend random bytes. fourteen will be longer.
+        XCTAssertGreaterThan(fourteenWithSecret.encrypt(cleartext: "twoseventythree").count,
+                             twelveWithSecret.encryptWithSecretSauce(cleartext: "twoseventythree").count)
+        XCTAssertEqual(fourteenWithSecret.encrypt(cleartext: "test"), fourteenWithSecret.encrypt(cleartext: "test"))
+        
+        XCTAssertEqual(fourteenWithSecret.crack(), plaintext)
+    }
+    
     func testChallenge15()  {
         let output = Data.from("ICE ICE BABY", in: .cleartext)
         let pad4 = output + Data.from("\u{4}\u{4}\u{4}\u{4}", in: .cleartext)
