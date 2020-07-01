@@ -20,11 +20,19 @@ class Challenge14 {
         self.secretSauce = secretSauce
     }
     
-    func encrypt(bufferedInput: Data) -> Data {
+    func encrypt(cleartext: String) -> Data {
+        let bufferedInput = Data.from(cleartext, in: .cleartext)!
         let fullInput = randomPrePad + bufferedInput + secretSauce
         return Challenge7().encryptECB(plainData: fullInput, keyData: key)!
     }
     
     /************** Get Cracking ********************************/
-    
+    func crack() {
+        let blockSize = Challenge12.findBlockSize(encryptFunction: encrypt)
+        
+        // we need to send a 4*blocksize payload to make sure we have at least two repeating blocks
+        // which we can then use as a location marker
+        let markerPayload = "A".repeat(4 * blockSize)
+        //let encWithMarker = Buffer.from(this.encrypt(markerPayload), 'hex');
+    }
 }

@@ -17,8 +17,8 @@ import Foundation
 
 class Challenge10 {
     
-    func encryptCBC(bufferedInput: Data, keyData: Data, iv: UInt8) -> Data {
-        let xorTarget = Data([UInt8](repeating: UInt8(iv), count: 16))
+    func encryptCBC(bufferedInput: Data, keyData: Data, iv: Int) -> Data {
+        let xorTarget = Data.fill(with: iv, count: 16)
         return encryptCBC(bufferedInput: bufferedInput, keyData: keyData, iv: xorTarget)
     }
     
@@ -37,8 +37,8 @@ class Challenge10 {
         return output
     }
     
-    func decryptCBC(bufferedInput: Data, keyData: Data, iv: UInt8) -> Data {
-        var xorTarget = Data([UInt8](repeating: UInt8(iv), count: 16))
+    func decryptCBC(bufferedInput: Data, keyData: Data, iv: Int) -> Data {
+        var xorTarget = Data.fill(with: iv, count: 16)
         
         var output = Data();
         let blocks = bufferedInput.breakIntoBlocks(ofSize: 16)

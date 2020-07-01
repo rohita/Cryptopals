@@ -69,7 +69,7 @@ final class Set2Tests: XCTestCase {
     }
     
     func testChallenge11_oracle() {
-        let input = String(repeating: "a", count: 200) // nice identical stuff for us to find in ECB :)
+        let input = "a".repeat(200) // nice identical stuff for us to find in ECB :)
         let output = Challenge11().randomEncrypt(Data.from(input, in: .cleartext)!)
         XCTAssertEqual(Challenge11().oracle(ciphertext: output.ciphertext), output.mode)
     }

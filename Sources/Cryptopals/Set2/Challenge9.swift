@@ -35,9 +35,9 @@ class Challenge9 {
         
         // Pad with same digit as the number of bytes required to pad
         // https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS#5_and_PKCS#7
-        let pad = [UInt8](repeating: UInt8(padLen), count: padLen)
+        let pad = Data.fill(with: padLen, count: padLen)
         var output = Data(bufferedInput)
-        output.append(contentsOf: pad)
+        output.append(pad)
         return output
     }
 }

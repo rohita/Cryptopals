@@ -53,7 +53,7 @@ class Challenge12 {
         var currentSize = 0
         
         while (blockGuess < 1 && i <= 256) {
-            let currentCT = encryptFunction(String(repeating: "A", count: i))
+            let currentCT = encryptFunction("A".repeat(i))
             if (currentCT.count > currentSize && currentSize > 0) {
                 blockGuess = currentCT.count - currentSize   // this will reach only when a new block is added, which will be blocksize boundary
             }
@@ -66,21 +66,21 @@ class Challenge12 {
     // Detect that the function is using ECB
     func detectECB() -> Bool {
         let blockSize = Challenge12.findBlockSize(encryptFunction: encryptWithSecretSauce)
-        let payload = String(repeating: "A", count: blockSize*5) // should definitely get a dupe here
+        let payload = "A".repeat(blockSize*5) // should definitely get a dupe here
         let ciphertext = encryptWithSecretSauce(cleartext: payload)
         return Challenge8().detectECB(bufferedInput: ciphertext, blockSize: blockSize)
     }
     
     func crackECB() -> String {
         let blockSize = Challenge12.findBlockSize(encryptFunction: encryptWithSecretSauce)
-        let ciphertext = encryptWithSecretSauce(cleartext: String(repeating: "A", count: blockSize))
+        let ciphertext = encryptWithSecretSauce(cleartext: "A".repeat(blockSize))
         let secretSauceLength = ciphertext.count - blockSize
         var recoveredPlaintext : String = ""
         
         for k in stride(from: 0, to: secretSauceLength, by: blockSize) {
             for j in 1...blockSize {
                 var dictionary : [String : Int] = [:]
-                let aaaaaaa = String(repeating: "A", count: blockSize-j)  // "AAAAAAA..." 15 A's
+                let aaaaaaa = "A".repeat(blockSize-j)  // "AAAAAAA..." 15 A's
                 let aaaaaaaPlusUnknown = encryptWithSecretSauce(cleartext: aaaaaaa).subdata(in: k..<(k+blockSize))  // we know 15 bytes are A's and 16th will be the first from the secret sauce
                 
                 for i in 0...255 {

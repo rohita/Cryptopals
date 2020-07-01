@@ -32,6 +32,10 @@ extension Data {
         }
     }
     
+    static func fill(with fill: Int, count: Int) -> Data {
+        return Data([UInt8](repeating: UInt8(fill), count: count))
+    }
+    
     private init?(fromHexEncodedString string: String) {
 
         // Convert 0 ... 9, a ... f, A ...F to their decimal value,
@@ -101,10 +105,4 @@ extension Data {
 //        var charArray = [Character]()
 //        charArray = map { Character(UnicodeScalar($0)) }
 //        return String(charArray)
-}
-
-extension Int {
-    func toChar() -> String {
-        return String(format: "%c", self)
-    }
 }

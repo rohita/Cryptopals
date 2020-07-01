@@ -62,13 +62,13 @@ class Challenge13 {
         
         // get 'admin' plus a bunch of 11s (16-5 = 11) to make a block
         let adminDiffLength = blockSize - 5
-        let pad = [UInt8](repeating: UInt8(adminDiffLength), count: adminDiffLength)
-        let adminRolePayload = "admin" + Data(pad).toString(in: .cleartext)   // one block "admin0b0b0b0b0b0b0b0b0b0b0b"
+        let pad = Data.fill(with: adminDiffLength, count: adminDiffLength)
+        let adminRolePayload = "admin" + pad.toString(in: .cleartext)   // one block "admin0b0b0b0b0b0b0b0b0b0b0b"
         
         // need to position the adminRolePayload so that it gets a block of its own
         // which means email=something needs to be exactly blocksize
         let prePayloadLength = blockSize - 6 // email=
-        let prePayload = String(repeating: "A", count: prePayloadLength)   // "AAAAAAAAAA"
+        let prePayload = "A".repeat(prePayloadLength)   // "AAAAAAAAAA"
         
         // encrypt once to get the encrypted admin payload
         let encryptedWithAdmin = generateEncodedProfile(email: prePayload + adminRolePayload)  // "email=AAAAAAAAAAadmin0b0b0b0b0b0b0b0b0b0b0b&uid..."
@@ -84,7 +84,7 @@ class Challenge13 {
         while ((pusherPayloadLength + 19) % blockSize != 0) {
             pusherPayloadLength += 1
         }
-        let pusherPayload = String(repeating: "A", count: pusherPayloadLength)   // 32 - 19 = 13
+        let pusherPayload = "A".repeat(pusherPayloadLength)   // 32 - 19 = 13
         let roleInLastBlock = generateEncodedProfile(email: pusherPayload)  // email=AAAAAAAAAAAAA&uid=10&role=user
         
         // now we just need to swap the last block with encAdminBlock
