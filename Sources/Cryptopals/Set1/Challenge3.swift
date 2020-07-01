@@ -17,7 +17,7 @@ import Foundation
 class Challenge3 {
     
     public func findLikelyPlaintext(_ hexString: String) -> Decrypted {
-        let data = Data.from(hexString, in: .hex)!
+        let data = Data.from(hexString, in: .hex)
         return findLikelyPlaintext(data)
     }
 
@@ -40,9 +40,8 @@ class Challenge3 {
     
     private func decrypt(_ data: Data, using key: Int) -> Decrypted {
         var tempBuffer = Data()
-        for i in 0..<data.count {
-            tempBuffer.append(data[i] ^ UInt8(key))  // xor each char in buffer with ascii
-        }
+        data.forEach { byte in tempBuffer.append(byte ^ UInt8(key))}  // xor each char in buffer with ascii
+
         let plaintext = tempBuffer.toString(in: .cleartext)
         let score = Englishness.score(input: plaintext)
         

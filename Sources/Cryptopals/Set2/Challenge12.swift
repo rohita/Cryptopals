@@ -40,7 +40,7 @@ class Challenge12 {
     }
     
     func encryptWithSecretSauce(cleartext: String) -> Data {
-        let bufferedInput = Data.from(cleartext, in: .cleartext)!
+        let bufferedInput = Data.from(cleartext, in: .cleartext)
         let fullInput = bufferedInput + secretSauce
         return Challenge7().encryptECB(plainData: fullInput, keyData: key)!
     }

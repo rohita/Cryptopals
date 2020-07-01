@@ -17,7 +17,7 @@ import Foundation
 class Challenge8 {
     
     func detectECBinArray(haystack: [String]) -> [String] {
-        return haystack.filter { detectECB(bufferedInput: Data.from($0, in: .hex)!, blockSize: 16) }
+        return haystack.filter { detectECB(bufferedInput: Data.from($0, in: .hex), blockSize: 16) }
     }
     
     func detectECB(bufferedInput: Data, blockSize: Int) -> Bool {

@@ -44,8 +44,8 @@ final class Set1Tests: XCTestCase {
     }
     
     func testChallenge6() throws {
-        let bufferedInput1 = Data.from("this is a test", in: .cleartext)!
-        let bufferedInput2 = Data.from("wokka wokka!!!", in: .cleartext)!
+        let bufferedInput1 = Data.from("this is a test", in: .cleartext)
+        let bufferedInput2 = Data.from("wokka wokka!!!", in: .cleartext)
         XCTAssertEqual(Challenge6().hammingDistance(bufferedInput1, bufferedInput2), 37)
         
         let inputFilePath: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/6.txt"
@@ -53,7 +53,7 @@ final class Set1Tests: XCTestCase {
         let inputFile = try String(contentsOfFile: inputFilePath)
         let outputFile = try String(contentsOfFile: outputFilePath)
         
-        let output = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(inputFile, in: .base64)!)
+        let output = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(inputFile, in: .base64))
         XCTAssertEqual(output.decryptKey, "Terminator X: Bring the noise")
         XCTAssertEqual(output.cleartext, outputFile)
     }
@@ -62,7 +62,7 @@ final class Set1Tests: XCTestCase {
         let input = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
         let encrypted = Challenge5().repeatingKeyXOR(input: input, key: "ICE")
         
-        let decrpted = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(encrypted, in: .hex)!)
+        let decrpted = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(encrypted, in: .hex))
         XCTAssertEqual(decrpted.decryptKey, "ICE")
         XCTAssertEqual(decrpted.cleartext, input)
     }
@@ -73,7 +73,7 @@ final class Set1Tests: XCTestCase {
         let inputFile = try String(contentsOfFile: inputFilePath)
         let outputFile = try String(contentsOfFile: outputFilePath)
         
-        let output = Challenge7().decryptECB(cipherData: Data.from(inputFile, in: .base64)!, keyData: Data.from("YELLOW SUBMARINE", in: .cleartext)!)!
+        let output = Challenge7().decryptECB(cipherData: Data.from(inputFile, in: .base64), keyData: Data.from("YELLOW SUBMARINE", in: .cleartext))!
         XCTAssertEqual(output.toString(in: .cleartext), outputFile + "\u{4}\u{4}\u{4}\u{4}")
     }
     
@@ -81,8 +81,8 @@ final class Set1Tests: XCTestCase {
         let input = "two seventy three alfredo sauce!"
         let output = "7fd5e4aa58a5ba5ccd0f36f70ec73f9118b85f95de41ce8ffc179f6f3500a61f789123cb6b31285e25afb0d331cb2af7"
         let key = "KOMBUCHA IS LIFE"
-        let encrypted = Challenge7().encryptECB(plainData: Data.from(input, in: .cleartext)!, keyData: Data.from(key, in: .cleartext)!)!
-        let decrypted = Challenge7().decryptECB(cipherData: Data.from(output, in: .hex)!, keyData: Data.from(key, in: .cleartext)!)!
+        let encrypted = Challenge7().encryptECB(plainData: Data.from(input, in: .cleartext), keyData: Data.from(key, in: .cleartext))!
+        let decrypted = Challenge7().decryptECB(cipherData: Data.from(output, in: .hex), keyData: Data.from(key, in: .cleartext))!
         XCTAssertEqual(encrypted.toString(in: .hex), output)
         XCTAssertEqual(decrypted.toString(in: .cleartext), input + "\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}\u{10}")
     }

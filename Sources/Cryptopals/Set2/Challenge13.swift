@@ -46,7 +46,7 @@ class Challenge13 {
     
     func generateEncodedProfile(email: String) -> Data {
         let profile = profileFor(email: email)
-        return Challenge7().encryptECB(plainData: Data.from(profile, in: .cleartext)!, keyData: key)!
+        return Challenge7().encryptECB(plainData: Data.from(profile, in: .cleartext), keyData: key)!
     }
     
     func decodeEncryptedProfile(bufferedInput: Data) throws -> Data {
@@ -62,7 +62,7 @@ class Challenge13 {
         
         // get 'admin' plus a bunch of 11s (16-5 = 11) to make a block
         let adminDiffLength = blockSize - 5
-        let pad = Data.fill(with: adminDiffLength, count: adminDiffLength)
+        let pad = Data.fill(with: adminDiffLength)
         let adminRolePayload = "admin" + pad.toString(in: .cleartext)   // one block "admin0b0b0b0b0b0b0b0b0b0b0b"
         
         // need to position the adminRolePayload so that it gets a block of its own

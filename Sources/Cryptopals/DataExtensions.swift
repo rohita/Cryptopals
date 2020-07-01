@@ -21,19 +21,19 @@ extension Data {
         case base64
     }
     
-    static func from(_ string: String, in encoding: Encoding) -> Data? {
+    static func from(_ string: String, in encoding: Encoding) -> Data {
         switch encoding {
         case .hex:
-            return Data(fromHexEncodedString: string)
+            return Data(fromHexEncodedString: string)!
         case .cleartext:
-            return string.data(using: .utf8)
+            return string.data(using: .utf8)!
         case .base64:
-            return Data(base64Encoded: string, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+            return Data(base64Encoded: string, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)!
         }
     }
     
-    static func fill(with fill: Int, count: Int) -> Data {
-        return Data([UInt8](repeating: UInt8(fill), count: count))
+    static func fill(with fillValue: Int, count: Int? = nil) -> Data {
+        return Data([UInt8](repeating: UInt8(fillValue), count: count ?? fillValue))
     }
     
     private init?(fromHexEncodedString string: String) {

@@ -19,7 +19,7 @@ import Foundation
     
     // Convert hex to base64
     public func hexToB64(_ hexString: String) -> String {
-        let bufferedInput = Data.from(hexString, in: .hex)!
+        let bufferedInput = Data.from(hexString, in: .hex)
         return bufferedInput.toString(in: .base64)
     }
  }

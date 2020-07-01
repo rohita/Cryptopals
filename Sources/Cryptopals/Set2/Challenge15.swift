@@ -26,7 +26,7 @@ import Foundation
 class Challenge15 {
     func removePad(bufferedInput: Data, blockSize: Int) throws -> Data {
         for padLen in 1...blockSize {
-            let pad = Data.fill(with: padLen, count: padLen)
+            let pad = Data.fill(with: padLen)
             if (bufferedInput.suffix(padLen) == pad) {
                 return bufferedInput.dropLast(padLen)
             }

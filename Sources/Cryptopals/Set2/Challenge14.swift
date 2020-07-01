@@ -21,7 +21,7 @@ class Challenge14 {
     }
     
     func encrypt(cleartext: String) -> Data {
-        let bufferedInput = Data.from(cleartext, in: .cleartext)!
+        let bufferedInput = Data.from(cleartext, in: .cleartext)
         let fullInput = randomPrePad + bufferedInput + secretSauce
         return Challenge7().encryptECB(plainData: fullInput, keyData: key)!
     }

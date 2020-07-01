@@ -21,8 +21,8 @@ import Foundation
 
 class Challenge5 {
     func repeatingKeyXOR(input: String, key: String) -> String {
-        let bufferedInput = Data.from(input, in: .cleartext)!
-        let bufferedKey = Data.from(key, in: .cleartext)!
+        let bufferedInput = Data.from(input, in: .cleartext)
+        let bufferedKey = Data.from(key, in: .cleartext)
         let output = repeatingKeyXOR(bufferedInput: bufferedInput, bufferedKey: bufferedKey)
         return output.toString(in: .hex)
     }
