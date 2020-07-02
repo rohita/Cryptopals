@@ -131,5 +131,24 @@ final class Set2Tests: XCTestCase {
         XCTAssertEqual(try Challenge15().removePad(bufferedInput: pad4, blockSize: 16), output)
         XCTAssertThrowsError(try Challenge15().removePad(bufferedInput: pad5, blockSize: 16))
     }
+    
+    func testChallenge16() throws {
+        let input = ";admin=true"
+        let sixteen = Challenge16()
+        let enc = sixteen.encrypt(cleartext: input)
+        
+        // should encrypt with cbc
+        XCTAssertFalse(Challenge8().detectECB(bufferedInput: enc, blockSize: 16))
+        
+        // should sanitize input
+        XCTAssertEqual(sixteen.sanitize(input), "admintrue")
+        
+        // should return false if admin=true is not found
+        XCTAssertFalse(try sixteen.checkAdmin(enc))
+        
+        // should create an admin account with sneakiness
+        let output = sixteen.makeAdmin()
+        XCTAssertTrue(try sixteen.checkAdmin(output))
+    }
 }
 

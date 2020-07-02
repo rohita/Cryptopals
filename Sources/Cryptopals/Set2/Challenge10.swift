@@ -38,7 +38,12 @@ class Challenge10 {
     }
     
     func decryptCBC(bufferedInput: Data, keyData: Data, iv: Int) -> Data {
-        var xorTarget = Data.fill(with: iv, count: 16)
+        let xorTarget = Data.fill(with: iv, count: 16)
+        return decryptCBC(bufferedInput: bufferedInput, keyData: keyData, iv: xorTarget)
+    }
+    
+    func decryptCBC(bufferedInput: Data, keyData: Data, iv: Data) -> Data {
+        var xorTarget = Data(iv)
         
         var output = Data();
         let blocks = bufferedInput.breakIntoBlocks(ofSize: 16)
@@ -50,5 +55,6 @@ class Challenge10 {
         }
         
         return output
+        
     }
 }
