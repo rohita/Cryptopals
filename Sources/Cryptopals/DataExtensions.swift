@@ -1,10 +1,11 @@
-/**
+/*
  Helper extensions to Data class
  */
 
 import Foundation
 
 // Data is a collection on UInt8
+// https://developer.apple.com/documentation/foundation/data
 extension Data {
     
     enum Encoding {
@@ -21,6 +22,7 @@ extension Data {
         case base64
     }
     
+    // Creates a Data object from the given encoded string
     static func from(_ string: String, in encoding: Encoding) -> Data {
         switch encoding {
         case .hex:
@@ -32,6 +34,10 @@ extension Data {
         }
     }
     
+    /*
+     Creates a Data object by filling it up with the given 'fillValue' repeated 'count' times.
+     If count is not given then the 'fillValue' is used
+     */
     static func fill(with fillValue: Int, count: Int? = nil) -> Data {
         return Data([UInt8](repeating: UInt8(fillValue), count: count ?? fillValue))
     }
