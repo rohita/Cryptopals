@@ -1,8 +1,10 @@
-/**
+/*
  Byte-at-a-time ECB decryption (Simple)
  =======================================
  
- Copy your oracle function to a new function that encrypts buffers under ECB mode using a consistent but unknown key (for instance, assign a single random key, once, to a global variable).
+ Copy your oracle function to a new function that encrypts buffers under ECB mode using a
+ consistent but unknown key (for instance, assign a single random key, once, to a global
+ variable).
 
  Now take that same function and have it append to the plaintext, BEFORE ENCRYPTING, the following string:
 
@@ -11,21 +13,25 @@
      dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg
      YnkK
  
- Base64 decode the string before appending it. *Do not base64 decode the string by hand; make your code do it.* The point is that you don't know its contents.
+ Base64 decode the string before appending it. *Do not base64 decode the string by hand; make your code do it.*
+ The point is that you don't know its contents.
 
- What you have now is a function that produces:
-
-     AES-128-ECB(your-string || unknown-string, random-key)
+ What you have now is a function that produces: AES-128-ECB(your-string || unknown-string, random-key)
  
  It turns out: you can decrypt "unknown-string" with repeated calls to the oracle function!
 
  Here's roughly how:
 
- 1. Feed identical bytes of your-string to the function 1 at a time --- start with 1 byte ("A"), then "AA", then "AAA" and so on. Discover the block size of the cipher. You know it, but do this step anyway.
+ 1. Feed identical bytes of your-string to the function 1 at a time --- start with 1 byte ("A"), then "AA",
+    then "AAA" and so on. Discover the block size of the cipher. You know it, but do this step anyway.
  2. Detect that the function is using ECB. You already know, but do this step anyways.
- 3. Knowing the block size, craft an input block that is exactly 1 byte short (for instance, if the block size is 8 bytes, make "AAAAAAA"). Think about what the oracle function is going to put in that last byte position.
- 4. Make a dictionary of every possible last byte by feeding different strings to the oracle; for instance, "AAAAAAAA", "AAAAAAAB", "AAAAAAAC", remembering the first block of each invocation.
- 5. Match the output of the one-byte-short input to one of the entries in your dictionary. You've now discovered the first byte of unknown-string.
+ 3. Knowing the block size, craft an input block that is exactly 1 byte short (for instance, if the block
+    size is 8 bytes, make "AAAAAAA"). Think about what the oracle function is going to put in that last byte
+    position.
+ 4. Make a dictionary of every possible last byte by feeding different strings to the oracle; for instance,
+    "AAAAAAAA", "AAAAAAAB", "AAAAAAAC", remembering the first block of each invocation.
+ 5. Match the output of the one-byte-short input to one of the entries in your dictionary. You've now discovered
+    the first byte of unknown-string.
  6. Repeat for the next byte.
  */
 
@@ -84,7 +90,7 @@ class Challenge12 {
             for j in 1...blockSize {
                 var dictionary : [String : Int] = [:]
                 let aaaaaaa = "A".repeat(numberOfAs-j)  // "AAAAAAA..." 15 A's in this block
-                let aaaaaaaPlusUnknown = encryptFunction(aaaaaaa).subdata(in: k..<(k+blockSize))  // we know 15 bytes are A's and 16th will be the first from the secret sauce 0x40 00 00 01 06 16 25 40
+                let aaaaaaaPlusUnknown = encryptFunction(aaaaaaa).subdata(in: k..<(k+blockSize))  // we know 15 bytes are A's and 16th will be the first from the secret sauce
                 
                 for i in 0...255 {
                     var currentPayload = aaaaaaa + recoveredPlaintext // A's + What ever we have discovered so far to make 15 bytes

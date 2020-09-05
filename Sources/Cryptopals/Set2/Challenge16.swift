@@ -1,4 +1,4 @@
-/**
+/*
  CBC bitflipping attacks
  ==========================
  
@@ -16,13 +16,18 @@
  
  The function should quote out the ";" and "=" characters.
 
- The function should then pad out the input to the 16-byte AES block length and encrypt it under the random AES key.
+ The function should then pad out the input to the 16-byte AES block length
+ and encrypt it under the random AES key.
 
- The second function should decrypt the string and look for the characters ";admin=true;" (or, equivalently, decrypt, split the string on ";", convert each resulting string into 2-tuples, and look for the "admin" tuple).
+ The second function should decrypt the string and look for the characters
+ ";admin=true;" (or, equivalently, decrypt, split the string on ";", convert
+ each resulting string into 2-tuples, and look for the "admin" tuple).
 
  Return true or false based on whether the string exists.
 
- If you've written the first function properly, it should not be possible to provide user input to it that will generate the string the second function is looking for. We'll have to break the crypto to do that.
+ If you've written the first function properly, it should not be possible to
+ provide user input to it that will generate the string the second function
+ is looking for. We'll have to break the crypto to do that.
 
  Instead, modify the ciphertext (without knowledge of the AES key) to accomplish this.
 

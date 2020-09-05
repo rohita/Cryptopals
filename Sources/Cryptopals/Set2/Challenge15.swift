@@ -1,8 +1,9 @@
-/**
+/*
  PKCS#7 padding validation
  ===========================
  
- Write a function that takes a plaintext, determines if it has valid PKCS#7 padding, and strips the padding off.
+ Write a function that takes a plaintext, determines if it has valid
+ PKCS#7 padding, and strips the padding off.
 
  The string:
 
@@ -18,7 +19,8 @@
 
      "ICE ICE BABY\x01\x02\x03\x04"
  
- If you are writing in a language with exceptions, like Python or Ruby, make your function throw an exception on bad padding.
+ If you are writing in a language with exceptions, like Python or Ruby,
+ make your function throw an exception on bad padding.
  */
 
 import Foundation
