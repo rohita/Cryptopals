@@ -75,14 +75,17 @@ class Challenge17 {
             var currentPlainTextBlock = Data(count: BLOCK_SIZE)  // Initially all 0s
             
             for padLength in 1...BLOCK_SIZE {
+                // We go backwords
+                let currentGuessLoc = BLOCK_SIZE - padLength
+                
                 // Copy what we already know into our fake block.
                 // This will copy plaintext found from end of block
-                // to (padLength-1)
+                // to (currentGuessLoc+1)
                 var fakePreviousBlock = Data(currentPlainTextBlock)
                 
                 // Now XOR padding + previous block
-                for k in 1...padLength {
-                  fakePreviousBlock[BLOCK_SIZE - k] = fakePreviousBlock[BLOCK_SIZE - k] ^ UInt8(padLength) ^ previousCipherBlock[BLOCK_SIZE - k]
+                for k in currentGuessLoc..<BLOCK_SIZE {
+                  fakePreviousBlock[k] ^= UInt8(padLength) ^ previousCipherBlock[k]
                 }
                 
                 for guessChar in 0...255 {
@@ -90,7 +93,7 @@ class Challenge17 {
                      Finally, XOR our guess char at padLength location. Everything after this
                      location was already found and copied above from currentPlainTextBlock
                      */
-                    fakePreviousBlock[BLOCK_SIZE - padLength] = fakePreviousBlock[BLOCK_SIZE - padLength] ^ UInt8(guessChar)
+                    fakePreviousBlock[currentGuessLoc] ^= UInt8(guessChar)
 
                     /*
                      CheckPad will first decrypt 'currentCipherBlock'. Then it will XOR
@@ -108,12 +111,12 @@ class Challenge17 {
                      it won't throw an error. Which means our guess was correct.
                      */
                     if (checkPad(fakePreviousBlock + currentCipherBlock)) {
-                        currentPlainTextBlock[BLOCK_SIZE-padLength] = UInt8(guessChar)
+                        currentPlainTextBlock[currentGuessLoc] = UInt8(guessChar)
                         break  // Fount it!
                     }
                     
                     // Not found. Remove guessChar and continue to next.
-                    fakePreviousBlock[BLOCK_SIZE - padLength] = fakePreviousBlock[BLOCK_SIZE - padLength] ^ UInt8(guessChar)
+                    fakePreviousBlock[currentGuessLoc] ^= UInt8(guessChar)
                     
                 } // end of guessChar
             } // end of padLength
