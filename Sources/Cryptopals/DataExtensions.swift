@@ -86,14 +86,14 @@ extension Data {
         }
     }
     
-    func breakIntoBlocks(ofSize blockSize: Int) -> [Data] {
+    func breakIntoBlocks(ofSize blockSize: Int, fillLastBlock: Bool = false) -> [Data] {
         var blocks = [Data]()
         
         // break input into blockSize blocks
         for startIndex in stride(from: 0, to: self.count, by: blockSize)  {
-            var block = Data(count: blockSize)
-            let endIndex = startIndex + blockSize > self.count ? self.count : startIndex + blockSize
-            let rangeToCopy = startIndex..<endIndex
+            let currentBlockSize = startIndex + blockSize > self.count ? self.count - startIndex : blockSize
+            var block = Data(count: fillLastBlock ? blockSize : currentBlockSize)
+            let rangeToCopy = startIndex..<(startIndex + currentBlockSize)
             
             block.replaceSubrange(0..<(rangeToCopy.count), with: self.subdata(in: rangeToCopy))
             blocks.append(block)

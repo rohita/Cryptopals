@@ -22,4 +22,19 @@ final class Set3Tests: XCTestCase {
             XCTAssertEqual(try seventeen.crack(cipherText), plaintext)
         }
     }
+    
+    func testChallenge18_incrementLittleEndian() {
+        XCTAssertEqual(Challenge18().incrementLittleEndian(Data.from("ffffffff", in: .hex)), Data.from("00000000", in: .hex))
+        XCTAssertEqual(Challenge18().incrementLittleEndian(Data.from("00ffffff", in: .hex)), Data.from("01ffffff", in: .hex))
+        XCTAssertEqual(Challenge18().incrementLittleEndian(Data.from("ff02030405060708", in: .hex)), Data.from("0003030405060708", in: .hex))
+    }
+    
+    func testChallenge18_decrypt() {
+        let input = Data.from("L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/2syLXzhPweyyMTJULu/6/kXX0KSvoOLSFQ==", in: .base64)
+        let nonce = Data.fill(with: 0, count: 8)
+        let key = Data.from("YELLOW SUBMARINE", in: .cleartext)
+        let ouput = "Yo, VIP Let's kick it Ice, Ice, baby Ice, Ice, baby "
+        
+        XCTAssertEqual(Challenge18().decryptCTR(bufferedInput: input, keyData: key, nonce: nonce).toString(in: .cleartext), ouput)
+    }
 }

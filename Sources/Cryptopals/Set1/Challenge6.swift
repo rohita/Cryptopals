@@ -53,7 +53,7 @@ class Challenge6 {
         
         // trying KEYSIZEs from 2 to 40
         for i in 2...40 {
-            let slices : [Data] = bufferedInput.breakIntoBlocks(ofSize: i)
+            let slices : [Data] = bufferedInput.breakIntoBlocks(ofSize: i, fillLastBlock: true)
             if (slices.count < 2) {
                 continue
             }
@@ -86,7 +86,7 @@ class Challenge6 {
         for keysize in likelyKeysizes {
             
             // break input into KEYSIZE blocks
-            let blockInput : [Data] = bufferedInput.breakIntoBlocks(ofSize: keysize)
+            let blockInput : [Data] = bufferedInput.breakIntoBlocks(ofSize: keysize, fillLastBlock: true)
 
             // transpose input into blocks of just 1st byte of each block, just 2nd etc
             let transposeBlockSize = blockInput.count
