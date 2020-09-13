@@ -1,6 +1,6 @@
 # Cryptopals
 
-This is Swift implementation of Matasano cryptography challenges at https://cryptopals.com/. My attempt is heavily influenced by two repos: 
+This is Swift implementation of cryptography challenges at https://cryptopals.com/. My attempt is heavily influenced by two repos: 
 * https://github.com/stripedpajamas/cryptopals/
 * https://github.com/lt/php-cryptopals
 
@@ -9,26 +9,26 @@ This is Swift implementation of Matasano cryptography challenges at https://cryp
 
 - [x] **Set 1: Basics**
   - [x] [1. Convert hex to base64](Sources/Cryptopals/Set1/Challenge1.swift)
-  - [x] 2. Fixed XOR
-  - [x] 3. Single-byte XOR cipher
-  - [x] 4. Detect single-character XOR
-  - [x] 5. Implement repeating-key XOR
-  - [x] 6. Break repeating-key XOR
-  - [x] 7. AES in ECB mode
-  - [x] 8. Detect AES in ECB mode
+  - [x] [2. Fixed XOR](Sources/Cryptopals/Set1/Challenge2.swift)
+  - [x] [3. Single-byte XOR cipher](Sources/Cryptopals/Set1/Challenge3.swift)
+  - [x] [4. Detect single-character XOR](Sources/Cryptopals/Set1/Challenge4.swift)
+  - [x] [5. Implement repeating-key XOR](Sources/Cryptopals/Set1/Challenge5.swift)
+  - [x] [6. Break repeating-key XOR](Sources/Cryptopals/Set1/Challenge6.swift)
+  - [x] [7. AES in ECB mode](Sources/Cryptopals/Set1/Challenge7.swift)
+  - [x] [8. Detect AES in ECB mode](Sources/Cryptopals/Set1/Challenge8.swift)
 - [x] **Set 2: Block crypto**
-  - [x] 9. Implement PKCS#7 padding
-  - [x] 10. Implement CBC mode
-  - [x] 11. An ECB/CBC detection oracle
-  - [x] 12. Byte-at-a-time ECB decryption (Simple)
-  - [x] 13. ECB cut-and-paste
-  - [x] 14. Byte-at-a-time ECB decryption (Harder)
-  - [x] 15. PKCS#7 padding validation
-  - [x] 16. CBC bitflipping attacks
+  - [x] [9. Implement PKCS#7 padding](Sources/Cryptopals/Set2/Challenge9.swift)
+  - [x] [10. Implement CBC mode](Sources/Cryptopals/Set2/Challenge10.swift)
+  - [x] [11. An ECB/CBC detection oracle](Sources/Cryptopals/Set2/Challenge11.swift)
+  - [x] [12. Byte-at-a-time ECB decryption (Simple)](Sources/Cryptopals/Set2/Challenge12.swift)
+  - [x] [13. ECB cut-and-paste](Sources/Cryptopals/Set2/Challenge13.swift)
+  - [x] [14. Byte-at-a-time ECB decryption (Harder)](Sources/Cryptopals/Set2/Challenge14.swift)
+  - [x] [15. PKCS#7 padding validation](Sources/Cryptopals/Set2/Challenge15.swift)
+  - [x] [16. CBC bitflipping attacks](Sources/Cryptopals/Set2/Challenge16.swift)
 - [ ] **Set 3: Block & stream crypto**
-  - [x] 17. The CBC padding oracle
-  - [x] 18. Implement CTR, the stream cipher mode
-  - [x] 19. Break fixed-nonce CTR mode using substitions
+  - [x] [17. The CBC padding oracle](Sources/Cryptopals/Set3/Challenge17.swift)
+  - [x] [18. Implement CTR, the stream cipher mode](Sources/Cryptopals/Set3/Challenge18.swift)
+  - [x] [19. Break fixed-nonce CTR mode using substitions](Sources/Cryptopals/Set3/Challenge19.swift)
   - [ ] 20. Break fixed-nonce CTR statistically
   - [ ] 21. Implement the MT19937 Mersenne Twister RNG
   - [ ] 22. Crack an MT19937 seed
