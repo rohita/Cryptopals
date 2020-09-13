@@ -29,7 +29,9 @@ class Challenge2 {
     
     func fixedXor(_ data1: Data, _ data2: Data) -> Data {
         var output = Data()
-        for i in 0..<data1.count {
+        let maxCount = data1.count <= data2.count ? data1.count : data2.count
+        
+        for i in 0..<maxCount {
             output.append(data1[i] ^ data2[i])
         }
         return output

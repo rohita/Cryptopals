@@ -37,4 +37,27 @@ final class Set3Tests: XCTestCase {
         
         XCTAssertEqual(Challenge18().decryptCTR(bufferedInput: input, keyData: key, nonce: nonce).toString(in: .cleartext), ouput)
     }
+    
+    func testChallenge19() throws {
+        let path: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/19.txt"
+        let file = try String(contentsOfFile: path)
+        let plaintexts: [String] = file.components(separatedBy: "\n")
+        let c19 = Challenge19(plaintexts)
+        
+        //c19.execute(guess: "The", against: 0)
+        //c19.execute(guess: "I h", against: 0)
+        //c19.execute(guess: "I have", against: 0)
+        //c19.execute(guess: "A terrible", against: 15)
+        //c19.execute(guess: "So sensitive", against: 28)
+        //c19.execute(guess: "Being certain ", against: 12)
+        //c19.execute(guess: "Eighteenth-century ", against: 3)
+        //c19.execute(guess: "When young and beautiful", against: 21)
+        //c19.execute(guess: "This man had kept a school", against: 23)
+        //c19.execute(guess: "Until her voice grew shrill", against: 19)
+        //c19.execute(guess: "To some who are near my heart", against: 33)
+        //c19.execute(guess: "This other his helper and friend", against: 25)
+        //c19.execute(guess: "He might have won fame in the end", against: 27)
+        //c19.execute(guess: "I have passed with a nod of the head", against: 4)
+        c19.execute(guess: "He, too, has been changed in his turn", against: 37)
+    }
 }

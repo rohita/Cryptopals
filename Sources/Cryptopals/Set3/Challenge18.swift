@@ -70,4 +70,8 @@ class Challenge18 {
         }
         return output
     }
+    
+    func encryptCTR(bufferedInput: Data, keyData: Data, nonce: Data) -> Data {
+        return decryptCTR(bufferedInput: bufferedInput, keyData: keyData, nonce: nonce)
+    }
 }
