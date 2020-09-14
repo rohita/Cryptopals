@@ -22,7 +22,7 @@ final class Set1Tests: XCTestCase {
     func testChallenge3() {
         let input = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
         let output = Challenge3().findLikelyPlaintext(input)
-        XCTAssertEqual(output.decryptKey, "X")
+        XCTAssertEqual(output.decryptKey.toString(in: .cleartext), "X")
         XCTAssertEqual(output.cleartext, "Cooking MC's like a pound of bacon")
     }
     
@@ -54,7 +54,7 @@ final class Set1Tests: XCTestCase {
         let outputFile = try String(contentsOfFile: outputFilePath)
         
         let output = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(inputFile, in: .base64))
-        XCTAssertEqual(output.decryptKey, "Terminator X: Bring the noise")
+        XCTAssertEqual(output.decryptKey.toString(in: .cleartext), "Terminator X: Bring the noise")
         XCTAssertEqual(output.cleartext, outputFile)
     }
     
@@ -63,7 +63,7 @@ final class Set1Tests: XCTestCase {
         let encrypted = Challenge5().repeatingKeyXOR(input: input, key: "ICE")
         
         let decrpted = Challenge6().crackRepeatingXOR(bufferedInput: Data.from(encrypted, in: .hex))
-        XCTAssertEqual(decrpted.decryptKey, "ICE")
+        XCTAssertEqual(decrpted.decryptKey.toString(in: .cleartext), "ICE")
         XCTAssertEqual(decrpted.cleartext, input)
     }
     

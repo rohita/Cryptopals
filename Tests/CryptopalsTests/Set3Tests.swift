@@ -60,4 +60,27 @@ final class Set3Tests: XCTestCase {
         //c19.execute(guess: "I have passed with a nod of the head", against: 4)
         c19.execute(guess: "He, too, has been changed in his turn", against: 37)
     }
+    
+    func testChallenge20() throws {
+        let path: String = "/Users/rohitagarwal/Projects/Cryptopals/Tests/CryptopalsTests/20.txt"
+        let file = try String(contentsOfFile: path)
+        let plaintexts: [String] = file.components(separatedBy: "\n")
+        let key : Data = Challenge11().generateRandomKey(length: 16)
+        let nonce = Data.fill(with: 0, count: 8)
+        
+        var tempCiphers = [Data]();
+        
+        for input in plaintexts {
+            let inputData = Data.from(input, in: .base64)
+            if (inputData.count == 0) {
+                continue
+            }
+            tempCiphers.append(Challenge18().encryptCTR(bufferedInput: inputData, keyData: key, nonce: nonce))
+        }
+        
+        let output = Challenge20().crackFixedNonceCTR(ciphertexts: tempCiphers)
+        for i in 0..<tempCiphers.count {
+            XCTAssertTrue(Data.from(plaintexts[i], in: .base64).toString(in: .cleartext).starts(with: output[i]))
+        }
+    }
 }

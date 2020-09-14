@@ -47,14 +47,14 @@ class Challenge3 {
         
         return Decrypted(
             ciphertext: data.toString(in: .hex),
-            decryptKey: String.from(charCode: key),
+            decryptKey: Data([UInt8(key)]),
             cleartext: plaintext,
             englishnessScore: score)
     }
     
     public struct Decrypted : Equatable {
         var ciphertext: String
-        var decryptKey: String
+        var decryptKey: Data
         var cleartext: String
         var englishnessScore: Double
     }

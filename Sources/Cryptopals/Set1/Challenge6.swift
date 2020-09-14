@@ -32,20 +32,45 @@ import Foundation
 
 class Challenge6 {
     
-    // The Hamming distance (or edit distance) is the number of differing bits
-    // between two strings
-    func hammingDistance(_ bufferedInput1: Data, _ bufferedInput2: Data) -> Int {
-        /*
-        We take the XOR of the 2 strings. It will be 1 if
-        bits are different, 0 if same. Then we add up all the 1s.
-        */
-        var output = 0;
-        for i in 0..<bufferedInput1.count {
-            let binaryString = String((bufferedInput1[i] ^ bufferedInput2[i]), radix: 2)
-            binaryString.forEach { digit in output += digit.wholeNumberValue! }
-        }
+    func crackRepeatingXOR(bufferedInput: Data) -> Challenge3.Decrypted {
+        let likelyKeysizes = guessKeySize(bufferedInput: bufferedInput)
+        print("Key sizes guessed: \(likelyKeysizes)")
+        var possibleDecrypted = [Challenge3.Decrypted]()
+        
+        // for each KEYSIZE possibility
+        for keysize in likelyKeysizes {
+            
+            // break input into KEYSIZE blocks
+            let blockInput : [Data] = bufferedInput.breakIntoBlocks(ofSize: keysize, fillLastBlock: true)
 
-        return output;
+            // transpose input into blocks of just 1st byte of each block, just 2nd etc
+            let transposedInputArr = transposeBlocks(blockInput)
+             
+            // Solve each transposed block as if it was single-character XOR using Challenge3.
+            var keyArr = [UInt8]();
+            for ciphertext in transposedInputArr {
+                let likelyPlaintext = Challenge3().findLikelyPlaintext(ciphertext)
+                keyArr.append(contentsOf: likelyPlaintext.decryptKey)
+            }
+            
+            // put all the keys together to have the finished key
+            let bufferedKey = Data(keyArr)
+            
+            // using this key decrypt the input and get its englishness score using Challenge5
+            let plaintext = Challenge5().repeatingKeyXOR(bufferedInput: bufferedInput, bufferedKey: bufferedKey).toString(in: .cleartext)
+            let score = Englishness.score(input: plaintext)
+            
+            possibleDecrypted.append(Challenge3.Decrypted(
+                ciphertext: "", // not needed
+                decryptKey: bufferedKey,
+                cleartext: plaintext,
+                englishnessScore: score))
+            
+            print("Key=\(bufferedKey.toString(in: .cleartext)), Englishness Score=\(score)")
+        }
+        
+        // Pick the one with highest englishness score
+        return possibleDecrypted.max { a, b in a.englishnessScore < b.englishnessScore }!
     }
     
     func guessKeySize(bufferedInput: Data) -> [Int] {
@@ -77,52 +102,36 @@ class Challenge6 {
         return sortedByHammingDistance.prefix(3).map { $0.0 }
     }
     
-    func crackRepeatingXOR(bufferedInput: Data) -> Challenge3.Decrypted {
-        let likelyKeysizes = guessKeySize(bufferedInput: bufferedInput)
-        print("Key sizes guessed: \(likelyKeysizes)")
-        var possibleDecrypted = [Challenge3.Decrypted]()
-        
-        // for each KEYSIZE possibility
-        for keysize in likelyKeysizes {
-            
-            // break input into KEYSIZE blocks
-            let blockInput : [Data] = bufferedInput.breakIntoBlocks(ofSize: keysize, fillLastBlock: true)
+    // The Hamming distance (or edit distance) is the number of differing bits
+    // between two strings
+    func hammingDistance(_ bufferedInput1: Data, _ bufferedInput2: Data) -> Int {
+        /*
+        We take the XOR of the 2 strings. It will be 1 if
+        bits are different, 0 if same. Then we add up all the 1s.
+        */
+        var output = 0;
+        for i in 0..<bufferedInput1.count {
+            let binaryString = String((bufferedInput1[i] ^ bufferedInput2[i]), radix: 2)
+            binaryString.forEach { digit in output += digit.wholeNumberValue! }
+        }
 
-            // transpose input into blocks of just 1st byte of each block, just 2nd etc
-            let transposeBlockSize = blockInput.count
-            var transposedInputArr = [Data]()
-            for byteIndex in 0..<keysize {
-                var transposed = Data(count: transposeBlockSize)
-                for blockIndex in 0..<transposeBlockSize  {
-                    transposed[blockIndex] = blockInput[blockIndex][byteIndex]
-                }
-                transposedInputArr.append(transposed)
+        return output;
+    }
+    
+    // Transpose input into blocks of just 1st byte of each input, then just 2nd etc
+    func transposeBlocks(_ input : [Data]) -> [Data] {
+        var transposedBlocks = [Data]()
+        let transposeBlockSize = input.count
+        let smallestInputSize = input.min { a, b in a.count < b.count }!.count // Truncate to common length of all inputs
+        
+        for byteIndex in 0..<smallestInputSize {
+            var transposed = Data(count: transposeBlockSize)
+            for blockIndex in 0..<transposeBlockSize  {
+                transposed[blockIndex] = input[blockIndex][byteIndex]
             }
-             
-            // Solve each transposed block as if it was single-character XOR using Challenge3.
-            var keyArr = [UInt8]();
-            for ciphertext in transposedInputArr {
-                let likelyPlaintext = Challenge3().findLikelyPlaintext(ciphertext)
-                keyArr.append(contentsOf: likelyPlaintext.decryptKey.utf8)
-            }
-            
-            // put all the keys together to have the finished key
-            let bufferedKey = Data(keyArr)
-            
-            // using this key decrypt the input and get its englishness score using Challenge5
-            let plaintext = Challenge5().repeatingKeyXOR(bufferedInput: bufferedInput, bufferedKey: bufferedKey).toString(in: .cleartext)
-            let score = Englishness.score(input: plaintext)
-            
-            possibleDecrypted.append(Challenge3.Decrypted(
-                ciphertext: "", // not needed
-                decryptKey: bufferedKey.toString(in: .cleartext),
-                cleartext: plaintext,
-                englishnessScore: score))
-            
-            print("Key=\(bufferedKey.toString(in: .cleartext)), Englishness Score=\(score)")
+            transposedBlocks.append(transposed)
         }
         
-        // Pick the one with highest englishness score
-        return possibleDecrypted.max { a, b in a.englishnessScore < b.englishnessScore }!
+        return transposedBlocks
     }
 }
