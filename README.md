@@ -29,7 +29,7 @@ This is Swift implementation of cryptography challenges at https://cryptopals.co
   - [x] [17. The CBC padding oracle](Sources/Cryptopals/Set3/Challenge17.swift)
   - [x] [18. Implement CTR, the stream cipher mode](Sources/Cryptopals/Set3/Challenge18.swift)
   - [x] [19. Break fixed-nonce CTR mode using substitions](Sources/Cryptopals/Set3/Challenge19.swift)
-  - [x ] [20. Break fixed-nonce CTR statistically](Sources/Cryptopals/Set3/Challenge20.swift)
+  - [x] [20. Break fixed-nonce CTR statistically](Sources/Cryptopals/Set3/Challenge20.swift)
   - [ ] 21. Implement the MT19937 Mersenne Twister RNG
   - [ ] 22. Crack an MT19937 seed
   - [ ] 23. Clone an MT19937 RNG from its output
