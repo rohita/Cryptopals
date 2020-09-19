@@ -87,8 +87,16 @@ final class Set3Tests: XCTestCase {
     @available(OSX 10.11, *)
     func testChallenge21() {
         let c21 = Challenge21(12345678)
-        XCTAssertEqual(c21.mt19937(), 1731800243)
-        XCTAssertEqual(c21.mt19937(), -79738025)
-        XCTAssertEqual(c21.mt19937(), 1449014807)
+        XCTAssertEqual(c21.nextInt(), 1731800243)
+        XCTAssertEqual(c21.nextInt(), -79738025)
+        XCTAssertEqual(c21.nextInt(), 1449014807)
+    }
+    
+    @available(OSX 10.11, *)
+    func testChallenge22() {
+        let randSeed : UInt64 = UInt64(Date().timeIntervalSince1970 - Double.random(in: 80...2000))
+        let mt19937 = Challenge21(randSeed)
+        let output = Challenge22().crackMt19937Seed(firstInt: mt19937.nextInt())
+        XCTAssertEqual(randSeed, output)
     }
 }

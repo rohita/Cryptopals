@@ -16,7 +16,7 @@ class Challenge21 {
         mersenne = GKMersenneTwisterRandomSource(seed: seed)
     }
 
-    func mt19937() -> Int {
+    func nextInt() -> Int {
         return mersenne.nextInt()
     }
 }
