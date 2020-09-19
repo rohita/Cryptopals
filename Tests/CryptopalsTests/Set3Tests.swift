@@ -83,4 +83,12 @@ final class Set3Tests: XCTestCase {
             XCTAssertTrue(Data.from(plaintexts[i], in: .base64).toString(in: .cleartext).starts(with: output[i]))
         }
     }
+    
+    @available(OSX 10.11, *)
+    func testChallenge21() {
+        let c21 = Challenge21(12345678)
+        XCTAssertEqual(c21.mt19937(), 1731800243)
+        XCTAssertEqual(c21.mt19937(), -79738025)
+        XCTAssertEqual(c21.mt19937(), 1449014807)
+    }
 }
